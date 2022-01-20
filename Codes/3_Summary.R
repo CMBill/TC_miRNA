@@ -1,0 +1,88 @@
+library(tinyarray)
+library(patchwork)
+library(ggplot2)
+library(dplyr)
+Path <- getwd()
+
+# 读取
+s.rpm <- read.csv(paste0(Path, '/Data/s_rpm.csv'), row.names = 1)
+SampleGroup <- read.csv(paste0(Path, './Data/SampleGroup.csv'), row.names = 1)
+group <- factor(SampleGroup[, 'Group'], levels = c('normal', 'cancer'), labels = c('normal', 'cancer'))
+
+res.DESeq2 <- read.csv(paste0(Path, '/Data/res_DESeq2_rpm.csv'), row.names = 1)
+res.edgeR <- read.csv(paste0(Path, '/Data/res_edgeR_rpm.csv'), row.names = 1)
+res.lm <- read.csv(paste0(Path, '/Data/res_limma_rpm.csv'), row.names = 1)
+
+res.sum <- data.frame(row.names = c('Down', 'Stable', 'Up'),
+                      DESeq2 = as.integer(table(res.DESeq2$tag)),
+                      edgeR = as.integer(table(res.edgeR$tag)),
+                      limma = as.integer(table(res.lm$tag))
+                      )
+
+rpm.log <- log(s.rpm + 1)
+
+# 获取各自的DEGs
+degs.DESeq2 <- row.names(res.DESeq2[res.DESeq2$tag != 'Stable', ])
+degs.DESeq2.up <- row.names(res.DESeq2[res.DESeq2$tag == 'Up', ])
+degs.DESeq2.down <- row.names(res.DESeq2[res.DESeq2$tag == 'Down', ])
+
+degs.edgeR <- row.names(res.edgeR[res.edgeR$tag != 'Stable', ])
+degs.edgeR.up <- row.names(res.edgeR[res.edgeR$tag == 'Up', ])
+degs.edgeR.down <- row.names(res.edgeR[res.edgeR$tag == 'Down', ])
+
+degs.lm <- row.names(res.lm[res.lm$tag != 'Stable', ])
+degs.lm.up <- row.names(res.lm[res.lm$tag == 'Up', ])
+degs.lm.down <- row.names(res.lm[res.lm$tag == 'Down', ])
+
+degs <- intersect(intersect(degs.DESeq2, degs.edgeR), degs.lm)
+degs.up <- intersect(intersect(degs.DESeq2.up, degs.edgeR.up), degs.lm.up)
+degs.down <- intersect(intersect(degs.DESeq2.down, degs.edgeR.down), degs.lm.down)
+
+# 火山图
+v.DESeq2 <- ggplot(res.DESeq2, aes(x = log2FoldChange, y = -log10(padj), colour = tag)) +
+  geom_point(alpha = 0.5, size = 2) +
+  scale_color_manual(values = c('#4154e8', 'grey', '#e87d00')) +
+  geom_vline(xintercept = c(-1, 1), lty = 5, col = 'black', lwd = 0.4) +
+  geom_hline(yintercept = -log10(0.05), lty = 5, col = 'black', lwd = 0.4) +
+  labs(x = 'log2FC', y = 'log10FDR', title = 'DESeq2') +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = c(1, 1), legend.justification = c(1, 1),
+        legend.background = element_blank(), legend.title = element_blank())
+
+v.edgeR <- ggplot(res.edgeR, aes(x = logFC, y = -log10(FDR), colour = tag)) +
+  geom_point(alpha = 0.5, size = 2) +
+  scale_color_manual(values = c('#4154e8', 'grey', '#e87d00')) +
+  geom_vline(xintercept = c(-1, 1), lty = 5, col = 'black', lwd = 0.4) +
+  geom_hline(yintercept = -log10(0.05), lty = 5, col = 'black', lwd = 0.4) +
+  labs(x = 'log2FC', y = 'log10FDR', title = 'edgeR') +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = c(1, 1), legend.justification = c(1, 1),
+        legend.background = element_blank(), legend.title = element_blank())
+
+v.lm <- ggplot(res.lm, aes(x = logFC, y = -log10(adj.P.Val), colour=tag)) +
+  geom_point(alpha = 0.5, size = 2) +
+  scale_color_manual(values = c('#4154e8', 'grey', '#e87d00')) +
+  geom_vline(xintercept = c(-1, 1), lty = 5, col = 'black', lwd = 0.4) +
+  geom_hline(yintercept = -log10(0.05), lty = 5, col = 'black', lwd = 0.4) +
+  labs(x = 'log2FC', y = 'log10FDR', title = 'limma') +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5), legend.position = c(1, 1), legend.justification = c(1, 1),
+        legend.background = element_blank(), legend.title = element_blank())
+
+# pca
+pca.DESeq2 <- draw_pca(rpm.log[degs.DESeq2, ], group)
+pca.edgeR <- draw_pca(rpm.log[degs.edgeR, ], group)
+pca.lm <- draw_pca(rpm.log[degs.lm, ], group)
+pca.a <- draw_pca(rpm.log, group)
+
+# 热图
+h.DESeq2 <- draw_heatmap(rpm.log[degs.DESeq2, ], group, legend = TRUE, n_cutoff = 2)
+h.edgeR <- draw_heatmap(rpm.log[degs.edgeR, ], group, legend = TRUE, n_cutoff = 2)
+h.lm <- draw_heatmap(rpm.log[degs.lm, ], group, legend = TRUE, n_cutoff = 2)
+h.a <- draw_heatmap(rpm.log[degs, ], group, legend = TRUE, n_cutoff = 2)
+
+# 韦恩图()
+up <- list(DESeq2 = degs.DESeq2.up, edgeR = degs.edgeR.up, limma = degs.lm.up)
+venn.up <- draw_venn(up, 'Up genes')
+down <- list(DESeq2 = degs.DESeq2.down, edgeR = degs.edgeR.down, limma = degs.lm.down)
+venn.down <- draw_venn(down, 'Down genes')
