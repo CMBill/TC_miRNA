@@ -79,10 +79,16 @@ pca.a <- draw_pca(rpm.log, group)
 h.DESeq2 <- draw_heatmap(rpm.log[degs.DESeq2, ], group, legend = TRUE, n_cutoff = 2)
 h.edgeR <- draw_heatmap(rpm.log[degs.edgeR, ], group, legend = TRUE, n_cutoff = 2)
 h.lm <- draw_heatmap(rpm.log[degs.lm, ], group, legend = TRUE, n_cutoff = 2)
-h.a <- draw_heatmap(rpm.log[degs, ], group, legend = TRUE, n_cutoff = 2)
+h.a <- draw_heatmap(rpm.log[degs, ], group, legend = TRUE, n_cutoff = 2, annotation_legend = TRUE, main = 'Heat map')
 
 # 韦恩图()
 up <- list(DESeq2 = degs.DESeq2.up, edgeR = degs.edgeR.up, limma = degs.lm.up)
 venn.up <- draw_venn(up, 'Up genes')
 down <- list(DESeq2 = degs.DESeq2.down, edgeR = degs.edgeR.down, limma = degs.lm.down)
 venn.down <- draw_venn(down, 'Down genes')
+
+# 拼图
+v.all <- v.DESeq2 + v.edgeR + v.lm
+degs.all.p <- (venn.up + venn.down) / (h.a + pca.a) 
+
+(v.DESeq2 + v.edgeR + v.lm) / (venn.up + venn.down + pca.a) / h.a
