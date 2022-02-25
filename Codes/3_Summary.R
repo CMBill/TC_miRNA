@@ -73,7 +73,7 @@ v.lm <- ggplot(res.lm, aes(x = logFC, y = -log10(adj.P.Val), colour=tag)) +
 pca.DESeq2 <- draw_pca(rpm.log[degs.DESeq2, ], group)
 pca.edgeR <- draw_pca(rpm.log[degs.edgeR, ], group)
 pca.lm <- draw_pca(rpm.log[degs.lm, ], group)
-pca.a <- draw_pca(rpm.log, group)
+pca.a <- draw_pca(rpm.log[degs, ], group)
 
 # 热图
 h.DESeq2 <- draw_heatmap(rpm.log[degs.DESeq2, ], group, legend = TRUE, n_cutoff = 2)
@@ -81,7 +81,7 @@ h.edgeR <- draw_heatmap(rpm.log[degs.edgeR, ], group, legend = TRUE, n_cutoff = 
 h.lm <- draw_heatmap(rpm.log[degs.lm, ], group, legend = TRUE, n_cutoff = 2)
 h.a <- draw_heatmap(rpm.log[degs, ], group, legend = TRUE, n_cutoff = 2, annotation_legend = TRUE, main = 'Heat map')
 
-# 韦恩图()
+# 韦恩图
 up <- list(DESeq2 = degs.DESeq2.up, edgeR = degs.edgeR.up, limma = degs.lm.up)
 venn.up <- draw_venn(up, 'Up genes')
 down <- list(DESeq2 = degs.DESeq2.down, edgeR = degs.edgeR.down, limma = degs.lm.down)
