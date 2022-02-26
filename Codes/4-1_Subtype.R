@@ -6,6 +6,7 @@ setwd(paste0(Path, '/Data'))
 clinical <- fromJSON(file = 'clinical.cart.2022-01-19.json')
 SampleGroup <- read.csv(paste0(Path, './Data/SampleGroup.csv'))
 s.rpm <- read.csv(paste0(Path, '/Data/s_rpm.csv'), row.names = 1, check.names = FALSE)
+s.count <- read.csv(paste0(Path, '/Data/s_count.csv'), row.names = 1, check.names = FALSE)
 
 num <- length(clinical)
 clin <- data.frame('case' = character(), 'subtype' = character())
@@ -31,6 +32,8 @@ s.groups[s.groups$subtype == 'Papillary carcinoma, follicular variant', 'Group']
 SubGroup <- s.groups[c('EntitiesId', 'Group')]
 
 sub.rpm <- s.rpm[, colnames(s.rpm) %in% SubGroup$EntitiesId]
+sub.count <- s.count[, colnames(s.count) %in% SubGroup$EntitiesId]
 
 write.csv(SubGroup, paste0(Path, '/Data/sub_group.csv'), row.names = FALSE)
 write.csv(sub.rpm, paste0(Path, '/Data/sub_rpm.csv'), row.names = TRUE)
+write.csv(sub.count, paste0(Path, '/Data/sub_count.csv'), row.names = TRUE)

@@ -90,7 +90,9 @@ selected_count <- exp_count[rowSums(exp_count <= 0) <= ncol(exp_count)/4, ]
 selected_rpm <- exp_rpm[rowSums(exp_rpm <= 0) <= ncol(exp_rpm)/4, ]
 # 三分之一
 s.rpm <- exp_rpm[rowSums(exp_rpm <= 0) <= ncol(exp_rpm)/3, ]
+s.count <- exp_count[rowSums(exp_count <= 0) <= ncol(exp_count)/3, ]
 
 write.csv(selected_count, paste0(Path, '/Data/selected_count.csv'), row.names = FALSE)
 write.csv(selected_rpm, paste0(Path, '/Data/selected_rpm.csv'), row.names = FALSE)
 write.csv(s.rpm, paste0(Path, '/Data/s_rpm.csv'), row.names = FALSE)
+write.csv(s.count, paste0(Path, '/Data/s_count.csv'), row.names = FALSE)

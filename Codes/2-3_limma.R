@@ -3,7 +3,7 @@ library(limma)
 Path <- getwd()
 
 # 导入数据
-s.rpm <- read.csv(paste0(Path, '/Data/s_rpm.csv'), row.names = 1)
+s.count <- read.csv(paste0(Path, '/Data/s_count.csv'), row.names = 1)
 SampleGroup <- read.csv(paste0(Path, './Data/SampleGroup.csv'), row.names = 1)
 group <- factor(SampleGroup[, 'Group'], levels = c('normal', 'cancer'), labels = c('normal', 'cancer'))
 
@@ -12,7 +12,7 @@ designMat <- model.matrix(~0+group)
 row.names(designMat) <- row.names(SampleGroup)
 
 # 标准化
-dgel <- DGEList(counts = s.rpm, group = group)
+dgel <- DGEList(counts = s.count, group = group)
 dgel.norm <- calcNormFactors(dgel, method = 'TMM')
 
 dgel.v <- voom(dgel.norm, designMat, plot = TRUE, normalize = 'quantile')
