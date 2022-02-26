@@ -34,9 +34,9 @@ degs.lm <- row.names(res.lm[res.lm$tag != 'Stable', ])
 degs.lm.up <- row.names(res.lm[res.lm$tag == 'Up', ])
 degs.lm.down <- row.names(res.lm[res.lm$tag == 'Down', ])
 
-degs <- intersect(intersect(degs.DESeq2, degs.edgeR), degs.lm)
-degs.up <- intersect(intersect(degs.DESeq2.up, degs.edgeR.up), degs.lm.up)
-degs.down <- intersect(intersect(degs.DESeq2.down, degs.edgeR.down), degs.lm.down)
+degs <- union(union(degs.DESeq2, degs.edgeR), degs.lm)
+degs.up <- union(union(degs.DESeq2.up, degs.edgeR.up), degs.lm.up)
+degs.down <- union(union(degs.DESeq2.down, degs.edgeR.down), degs.lm.down)
 
 # 火山图
 v.DESeq2 <- ggplot(res.DESeq2, aes(x = log2FoldChange, y = -log10(padj), colour = tag)) +
