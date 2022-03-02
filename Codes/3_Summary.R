@@ -33,13 +33,9 @@ degs.edgeR <- row.names(res.edgeR[res.edgeR$tag != 'Stable', ])
 degs.edgeR.up <- row.names(res.edgeR[res.edgeR$tag == 'Up', ])
 degs.edgeR.down <- row.names(res.edgeR[res.edgeR$tag == 'Down', ])
 
-degs.lm <- row.names(res.lm[res.lm$tag != 'Stable', ])
-degs.lm.up <- row.names(res.lm[res.lm$tag == 'Up', ])
-degs.lm.down <- row.names(res.lm[res.lm$tag == 'Down', ])
-
-degs <- union(union(degs.DESeq2, degs.edgeR), degs.lm)
-degs.up <- union(union(degs.DESeq2.up, degs.edgeR.up), degs.lm.up)
-degs.down <- union(union(degs.DESeq2.down, degs.edgeR.down), degs.lm.down)
+degs <- union(degs.DESeq2, degs.edgeR)
+degs.up <- union(degs.DESeq2.up, degs.edgeR.up)
+degs.down <- union(degs.DESeq2.down, degs.edgeR.down)
 
 # 火山图
 v.DESeq2 <- ggplot(res.DESeq2, aes(x = log2FoldChange, y = -log10(padj), colour = tag)) +
