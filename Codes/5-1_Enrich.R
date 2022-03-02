@@ -1,3 +1,8 @@
+library(clusterProfiler)
+library(topGO)
+library(Rgraphviz)
+library(pathview)
+library(org.Hs.eg.db)
 
 Path <- getwd()
 
@@ -24,4 +29,13 @@ degs.down <- union(degs.DESeq2.down, degs.edgeR.down)
 miRNA.targets <- read.csv('./Data/miRWalk_miRNA_Targets.csv')
 genes.table <- as.data.frame(table(miRNA.targets$genesymbol))
 genes <- as.character(genes.table$Var1)
+DEGs_entrez_id <- mapIds(x = org.Hs.eg.db,column = "ENTREZID", keys = genes, keytype = "SYMBOL")
+enrich_go_BP <- enrichGO(gene = DEGs_entrez_id,OrgDb = "org.Hs.eg.db",ont = "BP",pvalueCutoff = 0.05)
+enrich_go_MF <- enrichGO(gene = DEGs_entrez_id,OrgDb = "org.Hs.eg.db",ont = "MF",pvalueCutoff = 0.05)
+enrich_go_CC <- enrichGO(gene = DEGs_entrez_id,OrgDb = "org.Hs.eg.db",ont = "CC",pvalueCutoff = 0.05)
+enrich_go_KEGG <- enrichKEGG(gene = DEGs_entrez_id,organism = "hsa",keyType = "kegg",pvalueCutoff = 0.05)
 
+dotplot(enrich_go_BP,showCategory=20)
+dotplot(enrich_go_MF,showCategory=20)
+dotplot(enrich_go_CC,showCategory=20)
+dotplot(enrich_go_KEGG)
