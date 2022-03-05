@@ -27,6 +27,10 @@ degs.down <- union(degs.DESeq2.down, degs.edgeR.down)
 
 # 读取靶文件
 miRNA.targets <- read.csv('./Data/miRWalk_miRNA_Targets.csv')
+miRNA.targets1 <- read.csv('./Data/miRWalk_miRNA_Targets1.csv')
+
+miRNA.gene1 <- miRNA.targets1[, c('锘縨irnaid', 'genesymbol')]
+
 genes.table <- as.data.frame(table(miRNA.targets$genesymbol))
 genes <- as.character(genes.table$Var1)
 DEGs_entrez_id <- mapIds(x = org.Hs.eg.db,column = "ENTREZID", keys = genes, keytype = "SYMBOL")
@@ -35,7 +39,41 @@ enrich_go_MF <- enrichGO(gene = DEGs_entrez_id,OrgDb = "org.Hs.eg.db",ont = "MF"
 enrich_go_CC <- enrichGO(gene = DEGs_entrez_id,OrgDb = "org.Hs.eg.db",ont = "CC",pvalueCutoff = 0.05)
 enrich_go_KEGG <- enrichKEGG(gene = DEGs_entrez_id,organism = "hsa",keyType = "kegg",pvalueCutoff = 0.05)
 
-dotplot(enrich_go_BP,showCategory=20)
-dotplot(enrich_go_MF,showCategory=20)
-dotplot(enrich_go_CC,showCategory=20)
-dotplot(enrich_go_KEGG)
+BP <- dotplot(enrich_go_BP,showCategory=20)
+MF <- dotplot(enrich_go_MF,showCategory=20)
+CC <- dotplot(enrich_go_CC,showCategory=20)
+KEGG <- dotplot(enrich_go_KEGG)
+
+miRNA.table1 <- as.data.frame(table(miRNA.targets1$锘縨irnaid))
+miRNA.table1.order <- miRNA.table1[order(miRNA.table1$Freq, decreasing = T),]
+miRNA.top7 <- miRNA.table1.order[1:7, ]
+miRNA.t7 <- as.character(miRNA.top7$Var1)
+
+genes.table1 <- as.data.frame(table(miRNA.targets1$genesymbol))
+genes1 <- as.character(genes.table1$Var1)
+
+DEGs_entrez_id1 <- mapIds(x = org.Hs.eg.db,column = "ENTREZID", keys = genes1, keytype = "SYMBOL")
+enrich_go_BP1 <- enrichGO(gene = DEGs_entrez_id1,OrgDb = "org.Hs.eg.db",ont = "BP",pvalueCutoff = 0.05)
+enrich_go_MF1 <- enrichGO(gene = DEGs_entrez_id1,OrgDb = "org.Hs.eg.db",ont = "MF",pvalueCutoff = 0.05)
+enrich_go_CC1 <- enrichGO(gene = DEGs_entrez_id1,OrgDb = "org.Hs.eg.db",ont = "CC",pvalueCutoff = 0.05)
+enrich_go_KEGG1 <- enrichKEGG(gene = DEGs_entrez_id1,organism = "hsa",keyType = "kegg",pvalueCutoff = 0.05)
+
+BP1 <- dotplot(enrich_go_BP1,showCategory=10)
+MF1 <- dotplot(enrich_go_MF1,showCategory=10)
+CC1 <- dotplot(enrich_go_CC1,showCategory=10)
+KEGG1 <- dotplot(enrich_go_KEGG1)
+
+miRNA.targets1.top7 <- miRNA.gene1[miRNA.gene1$锘縨irnaid %in% miRNA.t7,]
+miRNA.gene1.table.t7 <- as.data.frame(table(miRNA.targets1.top7$genesymbol))
+genes1.t7 <- as.character(miRNA.gene1.table.t7$Var1)
+
+DEGs_entrez_id1.t7 <- mapIds(x = org.Hs.eg.db,column = "ENTREZID", keys = genes1.t7, keytype = "SYMBOL")
+enrich_go_BP1.t7 <- enrichGO(gene = DEGs_entrez_id1,OrgDb = "org.Hs.eg.db",ont = "BP",pvalueCutoff = 0.05)
+enrich_go_MF1.t7 <- enrichGO(gene = DEGs_entrez_id1,OrgDb = "org.Hs.eg.db",ont = "MF",pvalueCutoff = 0.05)
+enrich_go_CC1.t7 <- enrichGO(gene = DEGs_entrez_id1,OrgDb = "org.Hs.eg.db",ont = "CC",pvalueCutoff = 0.05)
+enrich_go_KEGG1.t7 <- enrichKEGG(gene = DEGs_entrez_id1,organism = "hsa",keyType = "kegg",pvalueCutoff = 0.05)
+
+BP1.t7 <- dotplot(enrich_go_BP1.t7,showCategory=10)
+MF1.t7 <- dotplot(enrich_go_MF1.t7,showCategory=10)
+CC1.t7 <- dotplot(enrich_go_CC1.t7,showCategory=10)
+KEGG1.t7 <- dotplot(enrich_go_KEGG1.t7)
