@@ -6,7 +6,7 @@ sub.count <- read.csv('./Data/s_count.csv', check.names = FALSE, row.names = 1)
 sub.rpm <- read.csv('./Data/s_rpm.csv', check.names = FALSE, row.names = 1)
 sub.group <- read.csv('./Data/SampleGroup.csv')
 degs <- read.table('./Data/degs.txt')
-sub <- read.table('./Data/sub.txt')
+sub <- read.table('./Data/degs.sub.txt')
 
 SampleGroup <- read.csv(paste0(Path, './Data/SampleGroup.csv'))
 SampleGroup[, 'Group'] <- factor(SampleGroup[, 'Group'], levels = c('normal', 'cancer'), labels = c('normal', 'cancer'))
@@ -31,7 +31,7 @@ rpm <- rpm[samplesL, , drop = FALSE]
 s.group <- s.group[samplesL, , drop = FALSE]
 
 # rf <- randomForest(rpm, s.group$Group)
-
+## 患癌 
 rpm.d <- rpm[, degs$V1]
 
 rpm1 <- cbind(rpm.d, s.group)
@@ -64,3 +64,5 @@ error.cv=sapply(tran.cv,"[[","error.cv")
 matplot(tran.cv[[1]]$n.var, cbind(rowMeans(error.cv), error.cv), type = "l", 
         lwd = c(2,rep(1,ncol(error.cv))), col = 1, lty = 1, log="x", 
         xlab = "Number of variables", ylab="CV Error")
+
+## PTC FVPTC
