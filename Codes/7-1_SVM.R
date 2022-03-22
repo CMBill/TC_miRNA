@@ -49,3 +49,4 @@ svm.roc <- roc(test$Group, as.numeric(pre.svm))
 plot(svm.roc, print.auc = TRUE, auc.polygon = TRUE, grid = c(0.1, 0.2), 
      grid.col = c("green", "red"), max.auc.polygon = TRUE, auc.polygon.col = "skyblue", 
      print.thres = TRUE, main = 'SVM模型ROC曲线 kernel = radial')
+

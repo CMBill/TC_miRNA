@@ -4,16 +4,18 @@ Created on Fri Nov 12 10:18:26 2021
 
 @author: 12870
 """
-from sklearn.metrics import roc_curve, auc, roc_auc_score
-from sklearn.metrics import f1_score, matthews_corrcoef
-from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import recall_score
 import pandas as pd
 import numpy as np
 from sklearn import metrics
 from sklearn import svm
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import roc_curve, plot_roc_curve, auc
-import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestClassifier as RFC
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_score
+from sklearn.linear_model import LogisticRegression
+import xgboost as xgb
 
 data = pd.read_csv('D:\\project\\TCGA_stomach_analysis\\data\\generank_selected.csv')
 X, y = np.array(data.iloc[:, 1:]), np.array(data.iloc[:, 0])
@@ -25,16 +27,6 @@ model_ = svm.SVC(kernel='linear', C=1)
 model_.fit(X_train, y_train)
 print(metrics.roc_auc_score(y_test, model_.predict(X_test)))
 
-import numpy as np
-import pandas as pd
-from sklearn import svm
-from sklearn import metrics
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier as RFC
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import precision_score, matthews_corrcoef
-from sklearn.linear_model import LogisticRegression
-import xgboost as xgb
 
 if __name__ == "__main__":
     path = 'D:\\project\\TCGA_stomach_analysis\\data\\generank_selected.csv'  # 数据文件路径
