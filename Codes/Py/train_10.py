@@ -24,7 +24,6 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import precision_score, recall_score, f1_score
-from imblearn.over_sampling import SMOTE
 from sklearn.metrics import confusion_matrix
 
 os.chdir('D:\\project\\TCGA_stomach_analysis\\data')
@@ -269,8 +268,7 @@ y_rfe = np.array(data.iloc[:, 0])
 
 rfc = RFC()
 param_grid = {'n_estimators': [i for i in range(1, 101, 10)],
-              'max_depth': [i for i in range(10, 101, 10)],
-              }
+              'max_depth': [i for i in range(10, 101, 10)],}
 grid = GridSearchCV(rfc, param_grid, cv=10, scoring='accuracy')
 grid.fit(X_rfe, y_rfe)
 print(grid.best_score_, grid.best_params_)
