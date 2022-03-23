@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKF
 from sklearn.ensemble import RandomForestClassifier as RFC
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score
-from sklearn.metrics import f1_score, confusion_matrix, roc_auc_score
+from sklearn.metrics import f1_score, confusion_matrix, roc_auc_score, plot_roc_curve, plot_confusion_matrix
 from sklearn.metrics import recall_score
 import xgboost as xgb
 
@@ -23,8 +23,8 @@ with open(path + '/Data/degs.sub.txt', 'r') as f:
     for line in f:
         sub.append(line.strip())
 SampleGroup = pd.read_csv(path + '/Data/SampleGroup.csv')
-SampleGroup.iloc[SampleGroup.iloc[:, 1] == 'cancer', 1] = 1
-SampleGroup.iloc[SampleGroup.iloc[:, 1] == 'normal', 1] = 0
+SampleGroup.iloc[SampleGroup.iloc[:, 1] == 'cancer', 1] = '1'
+SampleGroup.iloc[SampleGroup.iloc[:, 1] == 'normal', 1] = '0'
 
 SampleGroup.index = SampleGroup.iloc[:, 0]
 SampleGroup.drop('EntitiesId', axis=1, inplace=True)
@@ -37,8 +37,8 @@ rpm1 = rpm_T.loc[:, degs]
 X_rfe = np.array(rpm1)
 y_rfe = np.array(SampleGroup)
 # 划分训练测试集
-x_train, x_test, y_train, y_test = train_test_split(rpm1, SampleGroup, random_state=100, stratify=SampleGroup,
-                                                    train_size=0.7, test_size=0.3)
+# x_train, x_test, y_train, y_test = train_test_split(rpm1, SampleGroup, random_state=100, stratify=SampleGroup,
+#                                                     train_size=0.7, test_size=0.3)
 # SVM
 def svm_cv():
     clf = svm.SVC()
@@ -51,10 +51,9 @@ def svm_cv():
     skf = StratifiedKFold(n_splits=10)
     acc = []
     auc = []
-    f1 = []
     spe = []
     sen = []
-    for train_index, test_index in skf.split(rpm1, SampleGroup.values.reshape(-1,1)):
+    for train_index, test_index in skf.split(rpm1, SampleGroup.values):
         X_train, X_test = rpm1.iloc[train_index], rpm1.iloc[test_index]
         y_train, y_test = SampleGroup.values.ravel()[train_index], SampleGroup.values.ravel()[test_index]
         clf.fit(X_train, y_train)
@@ -63,12 +62,41 @@ def svm_cv():
         tn, fp, fn, tp = cm.ravel()
         acc.append((tp + tn) / (tp + tn + fp + fn))
         auc.append(roc_auc_score(y_test, clf.predict(X_test)))
-        f1.append(f1_score(y_test, clf.predict(X_test)))
         sen.append(tp / (tp + fn))
         spe.append(tn / (tn + fp))
     print('acc:{}'.format(np.array(acc).mean()),
           'auc:{}'.format(np.array(auc).mean()),
-          'f1:{}'.format(np.array(f1).mean()),
+          'spe:{}'.format(np.array(spe).mean()),
+          'sen:{}'.format(np.array(sen).mean())
+          )
+
+# RF
+def rf_cv():
+    rfc = RFC()
+    param_grid = {'n_estimators': [i for i in range(1, 101, 10)],
+                  'max_depth': [i for i in range(10, 101, 10)],}
+    grid = GridSearchCV(rfc, param_grid, cv=10, scoring='accuracy')
+    grid.fit(rpm1, SampleGroup.values.ravel())
+    print(grid.best_score_, grid.best_params_)
+    rfc = RFC(n_estimators=11, max_depth=30)
+    skf = StratifiedKFold(n_splits=10)
+    acc = []
+    auc = []
+    spe = []
+    sen = []
+    for train_index, test_index in skf.split(rpm1, SampleGroup.values):
+        X_train, X_test = rpm1.iloc[train_index], rpm1.iloc[test_index]
+        y_train, y_test = SampleGroup.values.ravel()[train_index], SampleGroup.values.ravel()[test_index]
+        rfc.fit(X_train, y_train)
+        cm = confusion_matrix(y_true=y_test, y_pred=rfc.predict(X_test))
+        print(cm)
+        tn, fp, fn, tp = cm.ravel()
+        acc.append((tp + tn) / (tp + tn + fp + fn))
+        auc.append(roc_auc_score(y_test, rfc.predict(X_test)))
+        sen.append(tp / (tp + fn))
+        spe.append(tn / (tn + fp))
+    print('acc:{}'.format(np.array(acc).mean()),
+          'auc:{}'.format(np.array(auc).mean()),
           'spe:{}'.format(np.array(spe).mean()),
           'sen:{}'.format(np.array(sen).mean())
           )
