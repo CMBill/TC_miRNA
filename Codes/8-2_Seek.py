@@ -168,3 +168,20 @@ xgb_p2 = xgb_seek2()
 xgb_p3 = xgb_seek3()
 xgb_p4 = xgb_seek4()
 xgb_p5 = xgb_seek5()
+
+print('svm: ' + str(svm_p) + '\n'
+      + 'rf: ' + str(rf_p) + '\n'
+      + 'xgb1: ' + str(xgb_p1) + '\n'
+      + 'xgb2: ' + str(xgb_p2) + '\n'
+      + 'xgb3: ' + str(xgb_p3) + '\n'
+      + 'xgb4: ' + str(xgb_p4) + '\n'
+      + 'xgb5: ' + str(xgb_p5) + '\n')
+'''
+svm: [0.9509679370840896, {'C': 1, 'kernel': 'linear'}]
+rf: [0.9877797943133697, {'max_depth': 20, 'n_estimators': 81}]
+xgb1: [0.9895039322444041, {'max_depth': 3, 'min_child_weight': 1}]
+xgb2: [0.9895039322444041, {'gamma': 0.0}]
+xgb3: [0.9895039322444041, {'colsample_bytree': 0.8, 'subsample': 0.8}]
+xgb4: [0.9895039322444041, {'reg_alpha': 1e-05}]
+xgb5: [0.9895039322444041, {'reg_lambda': 1}]
+'''
