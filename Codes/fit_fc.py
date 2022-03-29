@@ -74,7 +74,8 @@ def fit_c(classifier, X, y, k):
     sen = []
     tprs = []
     aucs = []
-    plt.figure(figsize=(10, 10))
+    # plt.figure(figsize=(10, 10))
+    plt.rcParams['figure.figsize'] = (10.0, 6.0)
     mean_fpr = np.linspace(0, 1, 100)
 
     fig, ax = plt.subplots()
