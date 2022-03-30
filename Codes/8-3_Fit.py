@@ -28,19 +28,22 @@ rpm1 = rpm_T.loc[:, degs]
 X_rfe = np.array(rpm1)
 y_rfe = np.array(SampleGroup)
 
+print('svm')
 clf = svm.SVC(kernel='linear', C=1, probability=True)
 fc.fit_c(clf, X_rfe, y_rfe, 5)
-
-rfc = RFC(n_estimators=81, max_depth=20)
+print('rf')
+rfc = RFC(n_estimators=61, max_depth=70)
 fc.fit_c(rfc, X_rfe, y_rfe, 5)
-
-xgb = XGB.XGBClassifier(learning_rate=0.1,
-                        n_estimators=81,
+print('xgb')
+xgb = XGB.XGBClassifier(objective='binary:logistic',
+                        nthread=4,
+                        learning_rate=0.1,
+                        n_estimators=170,
                         max_depth=3,
                         min_child_weight=1,
                         gamma=0.0,
-                        colsample_bytree=0.8,
-                        subsample=0.8,
-                        reg_alpha=1e-05,
+                        colsample_bytree=0.6,
+                        subsample=0.6,
+                        reg_alpha=0.01,
                         reg_lambda=1)
 fc.fit_c(xgb, X_rfe, y_rfe, 5)
