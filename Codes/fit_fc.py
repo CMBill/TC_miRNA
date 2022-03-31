@@ -65,7 +65,7 @@ def fit_c(classifier, X, y, k):
     :param X: 表达值
     :param y: 标签
     :param k: K折数
-    :return: 输出ROC曲线及评价参数，无返回值
+    :return: 输出ROC曲线及评价参数，保存图片为PDF文件，无返回值
     """
     cv = StratifiedKFold(n_splits=k)
     acc = []
