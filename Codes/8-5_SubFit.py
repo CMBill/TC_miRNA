@@ -35,12 +35,13 @@ rpm2 = rpm1.loc[s_group.index]
 X_rfe = np.array(rpm2)
 y_rfe = np.array(s_group)
 
+print('svm:')
 clf = svm.SVC(kernel='linear', C=1, probability=True)  # kernel='linear', C=1
 fc.fit_c(clf, X_rfe, y_rfe, 5)
-# rf
+print('rf:')
 rfc = RFC(n_estimators=61, max_depth=20)
 fc.fit_c(rfc, X_rfe, y_rfe, 5)
-# xgb
+print('xgb:')
 xgb = XGB.XGBClassifier(objective='binary:logistic',
                         nthread=4,
                         learning_rate=0.1,
