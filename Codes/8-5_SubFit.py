@@ -35,7 +35,7 @@ rpm2 = rpm1.loc[s_group.index]
 X_rfe = np.array(rpm2)
 y_rfe = np.array(s_group)
 
-clf = svm.SVC(kernel='linear', C=1, probability=True)
+clf = svm.SVC(kernel='linear', C=1, probability=True)  # kernel='linear', C=1
 fc.fit_c(clf, X_rfe, y_rfe, 5)
 # rf
 rfc = RFC(n_estimators=61, max_depth=20)

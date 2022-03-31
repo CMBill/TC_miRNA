@@ -4,6 +4,7 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, roc_curve, auc, RocCurveDisplay
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import precision_score, recall_score, f1_score
+import time
 
 
 def metrics_fit(classifier, X, y, k):
@@ -111,11 +112,15 @@ def fit_c(classifier, X, y, k):
     ax.fill_between(mean_fpr, tprs_lower, tprs_upper, color='grey', alpha=.2)
 
     ax.set(xlim=[-0.05, 1.05], ylim=[-0.05, 1.05],
-           title="Receiver operating characteristic example")
+           title="Receiver operating characteristic")
     ax.legend(loc="lower right")
+    t = time.gmtime()
+    timestamp = time.strftime('%m%d%H%M%S', t)
+    plt.savefig('./pics/Model' + timestamp + '.pdf')
     plt.show()
 
-    print('acc:{}'.format(np.array(acc).mean()),
+    print('./pics/Model' + timestamp + '.pdf' + '\n' +
+          'acc:{}'.format(np.array(acc).mean()),
           'auc:{}'.format(np.array(auc1).mean()),
           'f1:{}'.format(np.array(f1).mean()),
           'spe:{}'.format(np.array(spe).mean()),
