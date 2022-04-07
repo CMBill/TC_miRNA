@@ -8,8 +8,6 @@ import time
 
 
 def metrics_fit(classifier, X, y, k):
-    """
-    """
     skf = StratifiedKFold(n_splits=k)
     acc = []
     auc1 = []
