@@ -13,10 +13,6 @@ with open(path + '/Data/degs.txt', 'r') as f:
     degs = []
     for line in f:
         degs.append(line.strip())
-with open(path + '/Data/degs.sub.txt', 'r') as f:
-    sub = []
-    for line in f:
-        sub.append(line.strip())
 SampleGroup = pd.read_csv(path + '/Data/SampleGroup.csv')
 # 数据预处理
 SampleGroup.iloc[SampleGroup.iloc[:, 1] == 'cancer', 1] = '1'
