@@ -28,7 +28,6 @@ rpm1 = rpm_T.loc[:, degs]
 X_rfe = np.array(rpm1)
 y_rfe = np.array(SampleGroup)
 
-
 # Seek
 
 
