@@ -7,55 +7,6 @@ from sklearn.metrics import precision_score, recall_score, f1_score
 import time
 
 
-def metrics_fit(classifier, X, y, k):
-    skf = StratifiedKFold(n_splits=k)
-    acc = []
-    auc1 = []
-    f1 = []
-    spe = []
-    sen = []
-    tprs = []
-    aucs = []
-    plt.figure(figsize=(10, 10))
-    mean_fpr = np.linspace(0, 1, 100)
-    i = 0
-    for train, test in skf.split(X, y):
-        classifier.fit(X[train], y[train].ravel())
-        probas_ = classifier.predict_proba(X[test])
-        fpr, tpr, thresholds = roc_curve(y[test], probas_[:, 1], pos_label='1')
-        tprs.append(np.interp(mean_fpr, fpr, tpr))
-        tprs[-1][0] = 0.0
-        roc_auc = auc(fpr, tpr)
-        aucs.append(roc_auc)
-        plt.plot(fpr, tpr, lw=1, alpha=0.3,
-                 label='ROC fold %d (AUC = %0.4f)' % (i, roc_auc))
-        i += 1
-        acc.append(accuracy_score(y[test], classifier.predict(X[test])))
-        auc1.append(roc_auc_score(y[test], classifier.predict(X[test])))
-        f1.append(f1_score(y[test], classifier.predict(X[test]), pos_label='1'))
-        sen.append(recall_score(y[test], classifier.predict(X[test]), pos_label='1'))
-        spe.append(precision_score(y[test], classifier.predict(X[test]), pos_label='1'))
-    plt.plot([0, 1], [0, 1], linestyle='--', lw=2, color='r',
-             label='Chance', alpha=.8)
-    mean_tpr = np.mean(tprs, axis=0)
-    mean_tpr[-1] = 1.0
-    mean_auc = auc(mean_fpr, mean_tpr)
-    plt.plot(mean_fpr, mean_tpr, color='b',
-             label=r'Mean ROC (AUC = %0.4f )' % mean_auc,
-             lw=2, alpha=.8)
-    plt.xlim([-0.01, 1.01])
-    plt.ylim([-0.01, 1.01])
-    plt.xlabel('False Positive Rate', fontsize=18)
-    plt.ylabel('True Positive Rate', fontsize=18)
-    plt.title('Cross-Validation ROC of SVM', fontsize=18)
-    plt.legend(loc="lower right", prop={'size': 15})
-    print('acc:{}'.format(np.array(acc).mean()),
-          'auc:{}'.format(np.array(auc1).mean()),
-          'f1:{}'.format(np.array(f1).mean()),
-          'spe:{}'.format(np.array(spe).mean()),
-          'sen:{}'.format(np.array(sen).mean())
-          )
-
 
 def fit_c(classifier, X, y, k):
     """
