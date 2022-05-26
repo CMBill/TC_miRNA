@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import xgboost
 from sklearn import svm
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
 path = "E:/wkh/Codes/Projects/TC_miRNA"
@@ -27,6 +27,9 @@ rpm1 = rpm_T.loc[:, degs]
 
 X_rfe = np.array(rpm1)
 y_rfe = np.array(SampleGroup)
+
+x_train, x_test, y_train, y_test = train_test_split(rpm1, SampleGroup, random_state=100, stratify=SampleGroup,
+                                                     train_size=0.6, test_size=0.4)
 
 # Seek
 

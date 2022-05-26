@@ -38,7 +38,7 @@ X_rfe = np.array(rpm1)
 y_rfe = np.array(SampleGroup)
 # 划分训练测试集
 # x_train, x_test, y_train, y_test = train_test_split(rpm1, SampleGroup, random_state=100, stratify=SampleGroup,
-#                                                     train_size=0.7, test_size=0.3)
+#                                                     train_size=0.6, test_size=0.4)
 # SVM
 def svm_cv():
     clf = svm.SVC()
