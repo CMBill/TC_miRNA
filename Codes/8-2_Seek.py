@@ -5,7 +5,7 @@ from sklearn import svm
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
-path = "E:/wkh/Codes/Projects/TC_miRNA"
+path = "."
 # 读取文件
 s_count = pd.read_csv(path + '/Data/s_count.csv')
 s_rpm = pd.read_csv(path + '/Data/s_rpm.csv')

@@ -11,7 +11,7 @@ from sklearn.metrics import f1_score, confusion_matrix, roc_auc_score, plot_roc_
 from sklearn.metrics import recall_score
 
 # 读取文件
-path = "E:/wkh/Codes/Projects/TC_miRNA"
+path = "."
 s_count = pd.read_csv(path + '/Data/s_count.csv')
 s_rpm = pd.read_csv(path + '/Data/s_rpm.csv')
 with open(path + '/Data/degs.txt', 'r') as f:

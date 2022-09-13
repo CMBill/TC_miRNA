@@ -9,7 +9,7 @@ import xgboost as XGB
 from sklearn.ensemble import RandomForestClassifier as RFC
 import Codes.fit_fc as fc
 
-path = "E:/wkh/Codes/Projects/TC_miRNA"
+path = "."
 # 读取文件
 s_count = pd.read_csv(path + '/Data/s_count.csv')
 s_rpm = pd.read_csv(path + '/Data/s_rpm.csv')
